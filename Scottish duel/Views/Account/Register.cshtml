@@ -1,0 +1,37 @@
+﻿@model Scottish_duel.Models.RegisterModel
+
+@{
+    ViewBag.Title = "Регистрация:";
+}
+<h2>@ViewBag.Title</h2>
+<h2>@ViewBag.dir</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+     
+    <div>
+        <hr />
+        @Html.ValidationSummary(false)
+ 
+        <div>
+            Логин
+            <div>
+                @Html.EditorFor(model => model.Login)
+            </div>
+        </div>
+ 
+        <div>
+            Пароль
+            <div>
+                @Html.EditorFor(model => model.Password)
+            </div>
+        </div>
+        <hr />
+        <div>
+            <div>
+                @Helpers.Sumbit()
+            </div>
+        </div>
+    </div>
+}
