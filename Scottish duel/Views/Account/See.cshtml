@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Scottish_duel.Models.RegisterModel>
+@{
+    ViewBag.Title = "See";
+}
+
+
+<div>
+    <h3>Распродажа книг</h3>
+    <table>
+        <tr class="header">
+            <td><p>Логин</p></td>
+            <td><p>Пароль</p></td>
+        </tr>
+        @foreach (Scottish_duel.Models.RegisterModel b in Model)
+        {
+            <tr>
+                <td><p>@b.Login</p></td>
+                <td><p>@b.Password</p></td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+<h2>See</h2>
+
