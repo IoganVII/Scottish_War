@@ -11,28 +11,35 @@
 {
     @Html.AntiForgeryToken()
 
+<div>
+    <hr />
+    @Html.ValidationSummary(false)
+
     <div>
-        <hr />
-        @Html.ValidationSummary(false)
-
+        Логин
         <div>
-            Логин
-            <div>
-                @Html.EditorFor(model => model.Login)
-            </div>
-        </div>
-
-        <div>
-            Пароль
-            <div>
-                @Html.EditorFor(model => model.Password)
-            </div>
-        </div>
-        <hr />
-        <div>
-            <div>
-                @Helpers.Sumbit()
-            </div>
+            @Html.EditorFor(model => model.Login)
         </div>
     </div>
+
+    <div>
+        Пароль
+        <div>
+            @Html.EditorFor(model => model.Password)
+        </div>
+    </div>
+    <hr />
+    <div>
+        <div>
+            @Helpers.Sign_in()
+        </div>
+    </div>
+
+    <hr />
+    <div>
+        <div>
+            @Helpers.Sign_up()
+        </div>
+    </div>
+</div>
 }

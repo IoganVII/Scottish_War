@@ -1,3 +1,9 @@
-﻿@helper Sumbit() { 
-    <input type="submit" formemethod="post" formaction="See" value="Регистрация" name="See" class="btn btn-default" />
-    }
+﻿@helper Sign_in()
+{
+    <input type="submit" formemethod="post" formaction="ClientRoom" value="Войти" name="ClientRoom" class="btn btn-default" />
+}
+
+@helper Sign_up()
+{
+    <input type="submit" formemethod="post" formaction="NewRegister" value="Регистрация" name="NewRegister" class="btn btn-default" />
+}

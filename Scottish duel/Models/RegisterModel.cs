@@ -8,6 +8,8 @@ namespace Scottish_duel.Models
     public class RegisterModel
     {
 
+        public int id { get; set; }
+
         public string Login { get; set; }
 
         public string Password { get; set; }

@@ -22,11 +22,16 @@ namespace Scottish_duel.Controllers
             return View();
         }
 
-        public ActionResult See ()
+        public ActionResult NewRegister()
         {
             return View(db.RegisterModels);
         }
 
+        public ActionResult ClientRoom()
+        {
+
+            return RedirectToAction("ClientRoom", "Play");
+        }
 
     }
 }
