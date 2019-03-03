@@ -11,3 +11,29 @@
 <address>
     <strong>Поддержка:</strong>   IoganVII@yandex.ru <br />
 </address>
+
+<div>
+    <table>
+        <tr>
+            <td><p>Логин</p></td>
+            <td><p>Пароль</p></td>
+            <td><p>Email</p></td>
+            <td></td>
+        </tr>
+        @foreach (var b in ViewBag.Base)
+        {
+            <tr>
+                <td width="100px"><p>@b.Login</p></td>
+                <td width="100px"><p>@b.Password</p></td>
+                <td width="100px"><p>@b.Email</p></td>
+            </tr>
+        }
+    </table>
+
+    <ul>
+        <li>   @ViewBag.ip</li>
+        <li>   @ViewBag.referrer</li>
+        <li>   @ViewBag.agent</li>
+
+    </ul>
+</div>

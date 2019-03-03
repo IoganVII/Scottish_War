@@ -1,3 +1,14 @@
 ﻿
-<h2>Тут будет игра</h2>
+<h2>@ViewBag.Mes</h2>
+
+<script src="~/Scripts/MyScripts/GameTable.js"></script>
+
+<div class="row">
+    <div class="col-md-6" id="PlaceTable">
+        <table class="table" id="GameRooms">
+            
+        </table>
+    </div>
+</div>
+<input type="submit"   value="Добавить" name="" class="btn btn-default" onclick="AddTable(@ViewBag.id)" />
 

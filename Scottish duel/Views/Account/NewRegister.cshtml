@@ -1,25 +1,43 @@
-﻿@model IEnumerable<Scottish_duel.Models.RegisterModel>
-@{
-    ViewBag.Title = "Вы можете зарегестрироваться";
+﻿@model Scottish_duel.Models.RegisterModel
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <hr />
+        <div>
+            Логин
+            <div>
+                @Html.EditorFor(model => model.Login)
+            </div>
+        </div>
+
+        <div>
+            Пароль
+            <div>
+                @Html.EditorFor(model => model.Password)
+            </div>
+        </div>
+
+        <div>
+            Email
+            <div>
+                @Html.EditorFor(model => model.Email)
+            </div>
+        </div>
+
+        <hr />
+        <div>
+            <div>
+                @Helpers.New_Sign_up()
+            </div>
+        </div>
+
+    </div>
+
 }
 
 
-<div>
-    <table>
-        <tr class="header">
-            <td><p>Логин</p></td>
-            <td><p>Пароль</p></td>
-        </tr>
-        @foreach (Scottish_duel.Models.RegisterModel b in Model)
-        {
-            <tr>
-                <td><p>@b.Login</p></td>
-                <td><p>@b.Password</p></td>
-            </tr>
-        }
-    </table>
-</div>
-
-
-<h2>See</h2>
 

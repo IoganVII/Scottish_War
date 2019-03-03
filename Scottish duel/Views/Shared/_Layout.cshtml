@@ -15,6 +15,9 @@
             <li style="font-size:24pt">@Html.ActionLink("Играть", "Register", "Account")</li>
             <li style="font-size:24pt">@Html.ActionLink("О нас", "Contact", "Home")</li>
         </ul>
+
+
+
     </div>
     <div class="container body-content">
         @RenderBody()
@@ -23,9 +26,10 @@
             <p>&copy; @DateTime.Now.Year – "Шотландский поединок"</p>
         </footer>
     </div>
-
+    @Html.Partial("~/Views/chat/chat.cshtml");
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/signalr/hubs"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -22,3 +22,19 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.chat-window .chat-header{
+    display:flex;
+
+}
+
+.chat-window .chat-button{
+    margin-left:auto;
+
+}
+
+.chat-window{
+    right:0;
+    bottom:0;
+    position:fixed;
+}
