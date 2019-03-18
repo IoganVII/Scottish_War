@@ -9,7 +9,6 @@
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
 
 <div>
     <hr />
@@ -25,7 +24,7 @@
     <div>
         Пароль
         <div>
-            @Html.EditorFor(model => model.Password)
+            @Html.PasswordFor(model => model.Password)
         </div>
     </div>
     <hr />

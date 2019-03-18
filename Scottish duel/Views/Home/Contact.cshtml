@@ -30,6 +30,22 @@
         }
     </table>
 
+    <table>
+        <tr>
+            <td width="100px"><p>Id</p></td>
+            <td width="100px"><p>Имя пользователя</p></td>
+        </tr>
+        @foreach (var b in ViewBag.Ap)
+        {
+        <tr>
+            <td width="100px"><p>@b.id</p></td>
+            <td width="100px"><p>@b.Name</p></td>
+        </tr>
+        }
+    </table>
+
+
+
     <ul>
         <li>   @ViewBag.ip</li>
         <li>   @ViewBag.referrer</li>

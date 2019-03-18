@@ -1,0 +1,58 @@
+﻿@model Scottish_duel.Models.ClientRoomModel
+
+@{
+    ViewBag.Title = "CreatedRoom";
+}
+
+<h2>Созданная комната комнаты</h2>
+<script src="~/Scripts/chat-hub.js"></script>
+<input hidden value="@Model.id" id="idRoom" />
+
+@using (Html.BeginForm())
+{
+
+
+
+
+
+    <div>
+        <h2>Имя комнаты:</h2>
+        <div>
+            <h3><li>@Model.name </li></h3>
+        </div>
+    </div>
+
+    <div>
+        <h2>
+            Пароль комнаты:
+        </h2>
+        <div>
+            <h3><li>@Model.password</li></h3>
+        </div>
+    </div>
+
+    <div>
+        <h2>
+            Число игроков:
+        </h2>
+        <div>
+            <h3><li>@Model.numberPlayer</li></h3>
+        </div>
+    </div>
+
+    <h2>Игроки: </h2>
+    <h3>
+        <li>@Model.nameFirstPlayer</li>
+    </h3>
+    <br />
+    <h3>
+        <li>@Model.nameSecondPlayer</li>
+    </h3>
+
+
+
+    @Html.Partial("~/Views/chat/chat.cshtml")
+}
+@Helpers.StartGame()
+<input value="Назад к комнатам" type="submit" onclick="location.href='ClientRoom'" />
+

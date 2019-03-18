@@ -12,3 +12,23 @@
 {
     <input type="submit" formemethod="post" formaction="NewRegisterList" value="Зарегестрироваться" name="NewRegisterList" class="btn btn-default" />
 }
+
+@helper BCreateRoom()
+{
+    <input type="submit" formemethod="post" formaction="CreateRoom" value="Создать комнату" name="CreateRoom" class="btn btn-default" />
+}
+
+@helper BJoinRoom()
+{
+    <input type="submit" value="Присоединиться" class="btn btn-default" id="joinRoom" />
+}
+
+@helper ViewRoom()
+{
+    <input type="submit" value="Отобразить"  class="btn btn-default" id="ViewRoom" />
+}
+
+@helper StartGame()
+{
+    <input type="submit"  value="Начать игру"  class="btn btn-default" id="bStartGame"  />
+}

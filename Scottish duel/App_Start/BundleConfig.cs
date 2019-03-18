@@ -22,7 +22,7 @@ namespace Scottish_duel
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(        
                       "~/Scripts/jquery.signalR-2.4.0.min.js",
-                      "~/Scripts/chat-hub.js",
+                      "~/Scripts/GameTable.js",
                       "~/Scripts/bootstrap.js"
                       ));
 

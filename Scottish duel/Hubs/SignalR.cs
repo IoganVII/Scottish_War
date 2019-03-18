@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Scottish_duel.Hubs.SignalRChat))]
+[assembly: OwinStartup(typeof(Scottish_duel.Hubs.SignalR))]
 
 namespace Scottish_duel.Hubs
 {
-    public class SignalRChat
+    public class SignalR
     {
         public void Configuration(IAppBuilder app)
         {

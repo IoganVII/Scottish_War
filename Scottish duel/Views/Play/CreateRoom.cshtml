@@ -1,0 +1,35 @@
+﻿@model Scottish_duel.Models.ClientRoomModel
+
+@{
+    ViewBag.Title = "CreateRoom";
+}
+
+<h2>Создание комнаты</h2>
+
+<script src="~/Scripts/chat-hub.js"></script>
+
+@using (Html.BeginForm())
+{
+
+
+
+    <div>
+        Имя комнаты
+        <div>
+            @Html.EditorFor(model => model.name)
+        </div>
+    </div>
+
+    <div>
+        Пароль комнаты
+        <div>
+            @Html.EditorFor(model => model.password)
+        </div>
+    </div>
+    @Html.Partial("~/Views/chat/chat.cshtml")
+}
+
+@Helpers.ViewRoom()
+
+<input value="Назад к комнатам" type="submit" onclick="location.href='ClientRoom'" />
+

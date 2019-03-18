@@ -1,5 +1,6 @@
 ﻿@model Scottish_duel.Models.RegisterModel
 
+<h2>Создание аккаунта: </h2>
 
 @using (Html.BeginForm())
 {
@@ -17,7 +18,7 @@
         <div>
             Пароль
             <div>
-                @Html.EditorFor(model => model.Password)
+                @Html.PasswordFor(model => model.Password)
             </div>
         </div>
 

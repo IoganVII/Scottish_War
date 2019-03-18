@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
 namespace Scottish_duel.Models
 {
-    public class RegisterModelContext : DbContext
+    public class ActionPlayer
     {
 
-        public DbSet<RegisterModel> RegisterModels { get; set; }
+        public int id { set; get; }
+
+        public string Name { set; get; }
+
+        public int idRoom { set; get; }
     }
 }

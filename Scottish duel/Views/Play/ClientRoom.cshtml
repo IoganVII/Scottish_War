@@ -1,14 +1,62 @@
-﻿
+﻿@model Scottish_duel.Models.ClientRoomModel
 <h2>@ViewBag.Mes</h2>
 
-<script src="~/Scripts/MyScripts/GameTable.js"></script>
+<script src="~/Scripts/chat-hub.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    <div class="NameUser">
+        <label><h2>Пользователь: @ViewBag.name</h2></label>
+    </div>
+    <br />
+    <div>
+        <label id="Connection"><h2>Connection: </h2></label>
+    </div>
+
+
+    @Helpers.BCreateRoom()
+}
+
+
+@Helpers.BJoinRoom()
+
+
+
+<br />
+<br />
+
+@Html.Partial("~/Views/chat/chat.cshtml")
 
 <div class="row">
     <div class="col-md-6" id="PlaceTable">
         <table class="table" id="GameRooms">
-            
+
+            <tr>
+                <th>ID</th>
+                <th>NameRoom</th>
+                <th>NumberPlayer</th>
+                <th>Password</th>
+            </tr>
+
+            @foreach (var b in ViewBag.RoomBase)
+            {
+
+
+                <tr>
+                    <th id="id">@b.id</th>
+                    <th>@b.name</th>
+                    <th>@b.numberPlayer</th>
+                    <th>@b.password</th>
+                </tr>
+
+            }
         </table>
     </div>
 </div>
-<input type="submit"   value="Добавить" name="" class="btn btn-default" onclick="AddTable(@ViewBag.id)" />
+
+<input type="submit" id="con" value="connection" />
+<script src="~/Scripts/GameTable.js"></script>
+
+
 

@@ -4,22 +4,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
+
 
 namespace Scottish_duel.Controllers
 {
     public class HomeController : Controller
     {
+
+        RegisterModelContext db = new RegisterModelContext();
+        ActionPlayerContext Ap = new ActionPlayerContext();
+
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-                FormsAuthentication.SignOut();
+
+
+            if (Request.Cookies["Login"] != null)
+            {
+
+                Request.Cookies["Login"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(Request.Cookies["Login"]);
+                string str = Request.Cookies["Login"].Value;
+                ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
+                if (Player != null)
+                {
+                    Ap.ActionPlayers.Remove(Player);
+                    Ap.SaveChanges();
+                }
+
+                
+
+            }
+
 
             return View();
         }
 
         public ActionResult Play()
         {
+
+            if (Request.Cookies["Login"] != null)
+            {
+
+
+                string str = Request.Cookies["Login"].Value;
+                ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
+
+                if (Player != null)
+                {
+                    Ap.ActionPlayers.Remove(Player);
+                    Ap.SaveChanges();
+                }
+
+                Request.Cookies["Login"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(Request.Cookies["Login"]);
+            }
+
             return View();
         }
 
@@ -27,8 +66,25 @@ namespace Scottish_duel.Controllers
 
 
         {
+
+            if (Request.Cookies["Login"] != null)
+            {
+
+
+                string str = Request.Cookies["Login"].Value;
+                ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
+
+                if (Player != null)
+                {
+                    Ap.ActionPlayers.Remove(Player);
+                    Ap.SaveChanges();
+                }
+
+                Request.Cookies["Login"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(Request.Cookies["Login"]);
+            }
+
             ViewBag.Message = "Контакты владельца:";
-            RegisterModelContext db = new RegisterModelContext();
             ViewBag.Base = db.RegisterModels;
             string ip = HttpContext.Request.UserHostAddress;
             ViewBag.ip = ip;
@@ -37,10 +93,7 @@ namespace Scottish_duel.Controllers
             string user_agent = HttpContext.Request.UserAgent;
             ViewBag.agent = user_agent;
 
-
-            Session["userName"] = Request.Form["userName"];
-            bool isSessionNew = Session.IsNewSession;
-            string sessionId = Session.SessionID;
+            ViewBag.Ap = Ap.ActionPlayers;
 
             return View();
         }

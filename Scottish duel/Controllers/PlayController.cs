@@ -1,7 +1,11 @@
-﻿using Scottish_duel.Models;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Messaging;
+using Scottish_duel.Hubs;
+using Scottish_duel.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,25 +14,119 @@ namespace Scottish_duel.Controllers
     public class PlayController : Controller
     {
 
+        public string currentUser = "";
+
         RegisterModelContext db = new RegisterModelContext();
+        ActionPlayerContext Ap = new ActionPlayerContext();
+        ClientRoomModelContext Rb = new ClientRoomModelContext();
 
-        // GET: Play
-   //     [Authorize]
-        public ActionResult ClientRoom()
+        public ActionResult ClientRoom(ClientRoomModel model)
         {
-            var userName = User.Identity.Name;
 
-            foreach (RegisterModel b in db.RegisterModels)
+            ViewBag.name = "";
+            model.nameFirstPlayer = "";
+            model.nameSecondPlayer = "";
+
+
+            if (HttpContext.Request.UrlReferrer == null)
+                return RedirectToAction("Register", "Account");
+
+            //Проверка авторизации
+            if (Request.Cookies["Login"] == null)
+                return RedirectToAction("Register", "Account");
+
+            currentUser = Request.Cookies["Login"].Value;
+
+
+            if (Request.Cookies["Login"] != null)
             {
+                ViewBag.name = Request.Cookies["Login"].Value;
+            }
 
-                if (userName == b.Login)
+            //Если у пользователь является создателем комнаты и вышел, то удалить комнату
+            ActionPlayer player = Ap.ActionPlayers.Where(o => o.Name == currentUser).FirstOrDefault();
+            if (player.idRoom != 0)
+            {
+                ClientRoomModel roomModel = Rb.ClientRoomModels.Where(o => o.id == player.idRoom).FirstOrDefault();
+                if (roomModel.nameGod == player.Name)
                 {
-                    ViewBag.id = b.id;
+                    Rb.ClientRoomModels.Remove(roomModel);
+                    Rb.SaveChanges();
+                    player.idRoom = 0;
+                    Ap.SaveChanges();
+                }
+                else
+                {
+                    roomModel.nameSecondPlayer = "";
+                    roomModel.numberPlayer--;
+                    Rb.SaveChanges();
+                    player.idRoom = 0;
+                    Ap.SaveChanges();
                 }
             }
 
 
+
+
+            ViewBag.RoomBase = Rb.ClientRoomModels;
+
+            return View(model);
+        }
+
+        // [HttpPost]
+        public ActionResult CreateRoom()
+        {
+            ViewBag.name = "";
+
+            //Проверка авторизации
+            if (Request.Cookies["Login"] == null)
+                return RedirectToAction("Register", "Account");
+
+            if (Request.Cookies["Login"] != null)
+                ViewBag.name = Request.Cookies["Login"].Value;
+
+
             return View();
         }
+
+
+        [HttpPost]
+        public void JoinRoom(string idroom)
+        {
+
+
+
+        }
+
+        public ActionResult CreatedRoom()
+        {
+            //Проверка авторизации
+            if (Request.Cookies["Login"] == null)
+                return RedirectToAction("Register", "Account");
+
+            currentUser = Request.Cookies["Login"].Value;
+
+            ActionPlayer player = Ap.ActionPlayers.Where(o => o.Name == currentUser).FirstOrDefault();
+
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == player.idRoom).FirstOrDefault();
+            return View(model);
+        }
+
+
+        public ActionResult ViewRoom()
+        {
+
+
+
+
+            return RedirectToAction("CreatedRoom", "Play");
+        }
+
+        public ActionResult Game()
+        {
+            return View();
+        }
+
     }
+
 }
