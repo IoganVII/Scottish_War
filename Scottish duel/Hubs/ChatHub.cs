@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Microsoft.AspNet.SignalR;
 using Scottish_duel.Models;
 
@@ -25,7 +26,11 @@ namespace Scottish_duel.Hubs
         //Отправка в чат
         public void send(string name, string message)
         {
-            Clients.Group("1").broadcastMessage(name, message);
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == name).FirstOrDefault();
+            if (Player.idRoom == 0)
+                Clients.Group("WaitPlayer").broadcastMessage(name, message);
+            else
+                Clients.Group(Player.idRoom.ToString()).broadcastMessage(name, message);
         }
 
 
@@ -46,6 +51,7 @@ namespace Scottish_duel.Hubs
             model.numberPlayer = 1;
             Rb.ClientRoomModels.Add(model);
             Rb.SaveChanges();
+
 
             ActionPlayer player = Ap.ActionPlayers.Where(o => o.Name == currentUser).FirstOrDefault();
             player.idRoom = model.id;
@@ -90,15 +96,67 @@ namespace Scottish_duel.Hubs
         {
             ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
             var idRoom = Player.idRoom;
-            if (flag == 0)
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
+
+            if ((flag == 0) && (model.nameGod == Player.Name) && (model.numberPlayer == 2))
             {
                 Clients.Group(idRoom.ToString()).startGame(idRoom);
-                
+
             }
+            //Если начало игры
             if (flag == 1)
             {
+                string[] namescard = new string[8];
+                namescard[0] = "Музыкант";
+                namescard[1] = "Принцесса";
+                namescard[2] = "Шпион";
+                namescard[3] = "Убийца";
+                namescard[4] = "Посол";
+                namescard[5] = "Волшебник";
+                namescard[6] = "Генерал";
+                namescard[7] = "Принц";
+                if (model.nameGod == Player.Name)
+                {
+                    List<CardModel> listcard = new List<CardModel>();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        CardModel Card = new CardModel();
+                        Card.number = i;
+                        Card.name = namescard[i];
+                        Card.strength = i;
+                        listcard.Add(Card);
+                    }
+                    Player.deckCard = listcard;
+                    Player.ColorTeam = "С";
+                    Ap.SaveChanges();
+                }
+                else
+                {
+                    List<CardModel> listcard = new List<CardModel>();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        CardModel Card = new CardModel();
+                        Card.number = i;
+                        Card.name = namescard[i];
+                        Card.strength = i;
+                        listcard.Add(Card);
+                    }
+                    Player.deckCard = listcard;
+
+
+                    Player.ColorTeam = "K";
+                    Ap.SaveChanges();
+                }
                 Groups.Add(Context.ConnectionId, idRoom.ToString());
+                Clients.Caller.generatedTeam(Player.ColorTeam);
             }
+        }
+
+        public void inputCard(string cardId, string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            var idRoom = Player.idRoom;
+            Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam);
         }
 
     }

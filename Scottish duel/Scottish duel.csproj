@@ -157,6 +157,7 @@
     <Compile Include="Hubs\SignalR.cs" />
     <Compile Include="Models\ActionPlayer.cs" />
     <Compile Include="Models\ActionPlayerContext.cs" />
+    <Compile Include="Models\CardModel.cs" />
     <Compile Include="Models\ClientRoomModel.cs" />
     <Compile Include="Models\ClientRoomModelContext.cs" />
     <Compile Include="Models\RegisterModel.cs" />
@@ -176,12 +177,30 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Image\0.PNG" />
+    <Content Include="Image\К0.PNG" />
+    <Content Include="Image\К1.PNG" />
+    <Content Include="Image\К2.PNG" />
+    <Content Include="Image\К3.PNG" />
+    <Content Include="Image\К4.PNG" />
+    <Content Include="Image\К5.PNG" />
+    <Content Include="Image\К6.PNG" />
+    <Content Include="Image\К7.PNG" />
+    <Content Include="Image\С0.PNG" />
+    <Content Include="Image\С1.PNG" />
+    <Content Include="Image\С2.PNG" />
+    <Content Include="Image\С3.PNG" />
+    <Content Include="Image\С4.PNG" />
+    <Content Include="Image\С5.PNG" />
+    <Content Include="Image\С6.PNG" />
+    <Content Include="Image\С7.PNG" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Code\Helpers.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\chat-hub.js" />
+    <Content Include="Scripts\Game.js" />
     <Content Include="Scripts\GameTable.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -212,7 +231,9 @@
     <Content Include="Views\Chat\Chat.cshtml" />
     <Content Include="Views\Play\CreateRoom.cshtml" />
     <Content Include="Views\Play\CreatedRoom.cshtml" />
-    <Content Include="Views\Play\Game.cshtml" />
+    <Content Include="Views\Play\Game.cshtml">
+      <BrowseToURL>~/Play/Game</BrowseToURL>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
