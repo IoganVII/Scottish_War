@@ -97,9 +97,12 @@ namespace Scottish_duel.Hubs
             ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
             var idRoom = Player.idRoom;
             ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
-
+           
             if ((flag == 0) && (model.nameGod == Player.Name) && (model.numberPlayer == 2))
             {
+                model.firstPLayerActiveCard = false;
+                model.secondPLayerActiveCard = false;
+                Rb.SaveChanges();
                 Clients.Group(idRoom.ToString()).startGame(idRoom);
 
             }
@@ -142,8 +145,6 @@ namespace Scottish_duel.Hubs
                         listcard.Add(Card);
                     }
                     Player.deckCard = listcard;
-
-
                     Player.ColorTeam = "K";
                     Ap.SaveChanges();
                 }
@@ -152,12 +153,48 @@ namespace Scottish_duel.Hubs
             }
         }
 
+        //Описание битвы
+        public void battleround(string cardId, string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            var idRoom = Player.idRoom;
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
+            //Если разыграын обе карты
+            if ((model.firstPLayerActiveCard == true) && (model.secondPLayerActiveCard == true))
+            {
+                var stregth1 = Player.deckCard[model.idFirstPlayerCad].number;
+                var stregth2 = Player.deckCard[model.idSecondPlayerCad].number;
+                if (stregth1 > stregth2)
+                    Clients.Group(idRoom.ToString()).resultbattle("Победил синий игрок");
+                else
+                    Clients.Group(idRoom.ToString()).resultbattle("Победил красный игрок");
+                model.firstPLayerActiveCard = false;
+                model.secondPLayerActiveCard = false;
+                Rb.SaveChanges();
+            }
+        }
+
         public void inputCard(string cardId, string Login)
         {
             ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
             var idRoom = Player.idRoom;
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
+            if (model.nameGod == Player.Name)
+            {
+                model.firstPLayerActiveCard = true;
+                model.idFirstPlayerCad = Int32.Parse(cardId);
+            }
+            else
+            {
+                model.secondPLayerActiveCard = true;
+                model.idSecondPlayerCad = Int32.Parse(cardId);
+            }
+            Rb.SaveChanges();
             Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam);
+            battleround(cardId, Login);
         }
+
+        
 
     }
 }

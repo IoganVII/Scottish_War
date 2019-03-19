@@ -124,6 +124,10 @@ $(document).ready(
             document.location.href = "Game";
         };
 
+        chat.client.resultbattle = function (mes) {
+            alert("mes");
+        }
+
         chat.client.generatedTeam = function (color) {
             if (color == "С") {
                 $('#0').attr("src", $('#saveC0').attr('src'));

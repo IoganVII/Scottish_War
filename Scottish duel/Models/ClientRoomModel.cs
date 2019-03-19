@@ -21,5 +21,13 @@ namespace Scottish_duel.Models
 
         public string nameSecondPlayer { set; get; }
 
+        public bool firstPLayerActiveCard { set; get; }
+
+        public int idFirstPlayerCad { set; get; }
+
+        public int idSecondPlayerCad { set; get; }
+
+        public bool secondPLayerActiveCard { set; get; }
+
     }
 }
