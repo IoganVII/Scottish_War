@@ -21,6 +21,7 @@ namespace Scottish_duel.Hubs
 
         ActionPlayerContext Ap = new ActionPlayerContext();
         ClientRoomModelContext Rb = new ClientRoomModelContext();
+        CardModelContext Cb = new CardModelContext();
 
 
         //Отправка в чат
@@ -69,14 +70,19 @@ namespace Scottish_duel.Hubs
             var currentUser = user;
 
             ActionPlayer player = Ap.ActionPlayers.Where(o => o.Name == currentUser).FirstOrDefault();
-            player.idRoom = Int32.Parse(idroom);
-            Ap.SaveChanges();
-            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == player.idRoom).FirstOrDefault();
-            model.nameSecondPlayer = player.Name;
-            model.numberPlayer += 1;
-            Rb.SaveChanges();
-            Clients.Caller.upDateRoom();
-            Clients.Group(idroom).upDateRoom();
+            int integerIdRoom = Int32.Parse(idroom);
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == integerIdRoom).FirstOrDefault();
+            if (model.numberPlayer < 2)
+            {
+                player.idRoom = Int32.Parse(idroom);
+                Ap.SaveChanges();
+                model.nameSecondPlayer = player.Name;
+                model.numberPlayer += 1;
+                Rb.SaveChanges();
+                Clients.OthersInGroup("WaitPlayer").UpDateTableRoom();
+                Clients.Caller.upDateRoom();
+                Clients.Group(idroom).upDateRoom();
+            }
 
         }
 
@@ -97,11 +103,14 @@ namespace Scottish_duel.Hubs
             ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
             var idRoom = Player.idRoom;
             ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
-           
+
             if ((flag == 0) && (model.nameGod == Player.Name) && (model.numberPlayer == 2))
             {
                 model.firstPLayerActiveCard = false;
                 model.secondPLayerActiveCard = false;
+                model.vPointFerstPlayer = 0;
+                model.vPointSecondPlayer = 0;
+                model.numberRound = 0;
                 Rb.SaveChanges();
                 Clients.Group(idRoom.ToString()).startGame(idRoom);
 
@@ -109,42 +118,13 @@ namespace Scottish_duel.Hubs
             //Если начало игры
             if (flag == 1)
             {
-                string[] namescard = new string[8];
-                namescard[0] = "Музыкант";
-                namescard[1] = "Принцесса";
-                namescard[2] = "Шпион";
-                namescard[3] = "Убийца";
-                namescard[4] = "Посол";
-                namescard[5] = "Волшебник";
-                namescard[6] = "Генерал";
-                namescard[7] = "Принц";
                 if (model.nameGod == Player.Name)
                 {
-                    List<CardModel> listcard = new List<CardModel>();
-                    for (int i = 0; i < 8; i++)
-                    {
-                        CardModel Card = new CardModel();
-                        Card.number = i;
-                        Card.name = namescard[i];
-                        Card.strength = i;
-                        listcard.Add(Card);
-                    }
-                    Player.deckCard = listcard;
                     Player.ColorTeam = "С";
                     Ap.SaveChanges();
                 }
                 else
                 {
-                    List<CardModel> listcard = new List<CardModel>();
-                    for (int i = 0; i < 8; i++)
-                    {
-                        CardModel Card = new CardModel();
-                        Card.number = i;
-                        Card.name = namescard[i];
-                        Card.strength = i;
-                        listcard.Add(Card);
-                    }
-                    Player.deckCard = listcard;
                     Player.ColorTeam = "K";
                     Ap.SaveChanges();
                 }
@@ -162,15 +142,56 @@ namespace Scottish_duel.Hubs
             //Если разыграын обе карты
             if ((model.firstPLayerActiveCard == true) && (model.secondPLayerActiveCard == true))
             {
-                var stregth1 = Player.deckCard[model.idFirstPlayerCad].number;
-                var stregth2 = Player.deckCard[model.idSecondPlayerCad].number;
-                if (stregth1 > stregth2)
-                    Clients.Group(idRoom.ToString()).resultbattle("Победил синий игрок");
-                else
-                    Clients.Group(idRoom.ToString()).resultbattle("Победил красный игрок");
+
+                int[,] rule = new int[8, 8] {
+            {0,1,1,1,1,1,2,0 },
+            {2,0,2,1,2,1,1,0 },
+            {2,2,0,1,1,1,1,1 },
+            {2,2,2,0,2,1,1,0 },
+            {2,1,2,1,0,2,2,0 },
+            {2,2,2,2,1,0,1,0 },
+            {1,2,2,2,1,2,0,0 },
+            {0,0,2,0,0,0,0,0 }
+        };
+
+                CardModel card1 = Cb.CardModels.Where(o => o.number == model.idFirstPlayerCad).FirstOrDefault();
+                CardModel card2 = Cb.CardModels.Where(o => o.number == model.idSecondPlayerCad).FirstOrDefault();
+
+                var stregth1 = card1.strength;
+                var stregth2 = card2.strength;
+
+                int win = rule[7 - stregth2, 7 - stregth1];
+                switch (win)
+                {
+                    case 0:
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд отложен");
+                        break;
+                    case 1:
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа красных");
+                        model.vPointSecondPlayer++;
+                        break;
+                    case 2:
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа синих");
+                        model.vPointFerstPlayer++;
+                        break;
+                }
+
+                model.numberRound++;
                 model.firstPLayerActiveCard = false;
                 model.secondPLayerActiveCard = false;
                 Rb.SaveChanges();
+
+                if (model.numberRound == 8)
+                {
+                    if (model.vPointFerstPlayer > model.vPointSecondPlayer)
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа синих");
+                    if (model.vPointFerstPlayer < model.vPointSecondPlayer)
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа красных");
+                    if (model.vPointFerstPlayer == model.vPointSecondPlayer)
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: ничья");
+                    Clients.Group(idRoom.ToString()).upDateRoom();
+                }
+
             }
         }
 
@@ -183,18 +204,87 @@ namespace Scottish_duel.Hubs
             {
                 model.firstPLayerActiveCard = true;
                 model.idFirstPlayerCad = Int32.Parse(cardId);
+                Clients.Caller.getboolcard(model.firstPLayerActiveCard);
             }
             else
             {
                 model.secondPLayerActiveCard = true;
                 model.idSecondPlayerCad = Int32.Parse(cardId);
+                Clients.Caller.getboolcard(model.secondPLayerActiveCard);
             }
             Rb.SaveChanges();
             Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam);
+
             battleround(cardId, Login);
         }
 
-        
+        public void getActiveMomentCard(string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            var idRoom = Player.idRoom;
+            ClientRoomModel model = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
+            if (model.nameGod == Player.Name)
+            {
+                Clients.Caller.getMoment(model.firstPLayerActiveCard);
+            }
+            else
+            {
+                Clients.Caller.getMoment(model.secondPLayerActiveCard);
+            }
+        }
+
+        public void backInTableRoom(string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+
+            if (Player.idRoom != 0)
+            {
+                ClientRoomModel roomModel = Rb.ClientRoomModels.Where(o => o.id == Player.idRoom).FirstOrDefault();
+                if (roomModel.nameGod == Player.Name)
+                {
+                    Rb.ClientRoomModels.Remove(roomModel);
+                    Rb.SaveChanges();
+                    Clients.Group("WaitPlayer").upDateTableRoom();
+                    Clients.Group(Player.idRoom.ToString()).upDateTableRoom();
+                    Player.idRoom = 0;
+                    if (roomModel.nameSecondPlayer != "")
+                    {
+                        ActionPlayer SecondPlayer = Ap.ActionPlayers.Where(o => o.Name == roomModel.nameSecondPlayer).FirstOrDefault();
+                        SecondPlayer.idRoom = 0;
+                    }
+                    Ap.SaveChanges();
+                    
+                }
+                else
+                {
+                    roomModel.nameSecondPlayer = "";
+                    roomModel.numberPlayer--;
+                    Rb.SaveChanges();
+                    Clients.Group("WaitPlayer").upDateTableRoom();
+                    Clients.OthersInGroup(Player.idRoom.ToString()).upDateRoom();
+                    
+                    Player.idRoom = 0;
+                    Ap.SaveChanges();
+                    Clients.Caller.upDateTableRoom();
+                }
+            }
+        }
+
+        public void outPlayer(string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            Player.outPlauer = true;
+            Ap.SaveChanges();
+        }
+
+        public void playerClosWindow(string Login)
+        {
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            Ap.ActionPlayers.Remove(Player);
+            Ap.SaveChanges();
+        }
+
+
 
     }
 }

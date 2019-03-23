@@ -158,6 +158,7 @@
     <Compile Include="Models\ActionPlayer.cs" />
     <Compile Include="Models\ActionPlayerContext.cs" />
     <Compile Include="Models\CardModel.cs" />
+    <Compile Include="Models\CardModelContext.cs" />
     <Compile Include="Models\ClientRoomModel.cs" />
     <Compile Include="Models\ClientRoomModelContext.cs" />
     <Compile Include="Models\RegisterModel.cs" />

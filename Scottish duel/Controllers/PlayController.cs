@@ -11,6 +11,8 @@ using System.Web.Mvc;
 
 namespace Scottish_duel.Controllers
 {
+
+
     public class PlayController : Controller
     {
 
@@ -43,27 +45,8 @@ namespace Scottish_duel.Controllers
                 ViewBag.name = Request.Cookies["Login"].Value;
             }
 
-            //Если у пользователь является создателем комнаты и вышел, то удалить комнату
-            ActionPlayer player = Ap.ActionPlayers.Where(o => o.Name == currentUser).FirstOrDefault();
-            if (player.idRoom != 0)
-            {
-                ClientRoomModel roomModel = Rb.ClientRoomModels.Where(o => o.id == player.idRoom).FirstOrDefault();
-                if (roomModel.nameGod == player.Name)
-                {
-                    Rb.ClientRoomModels.Remove(roomModel);
-                    Rb.SaveChanges();
-                    player.idRoom = 0;
-                    Ap.SaveChanges();
-                }
-                else
-                {
-                    roomModel.nameSecondPlayer = "";
-                    roomModel.numberPlayer--;
-                    Rb.SaveChanges();
-                    player.idRoom = 0;
-                    Ap.SaveChanges();
-                }
-            }
+
+            
 
 
 

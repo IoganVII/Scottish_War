@@ -17,6 +17,8 @@ namespace Scottish_duel.Models
 
         public string ColorTeam { set; get; }
 
+        public bool outPlauer { set; get; }
+
         public List<CardModel> deckCard;
     }
 }

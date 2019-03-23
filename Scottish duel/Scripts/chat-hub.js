@@ -4,9 +4,23 @@ function getCookie(name) {
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
+};
+
+function setCookie(name, value, days, path) {
+
+    path = path || '/'; // заполняем путь если не заполнен
+    days = days || 10;  // заполняем время жизни если не получен параметр
+
+    var last_date = new Date();
+    last_date.setDate(last_date.getDate() + days);
+    var value = escape(value) + ((days == null) ? "" : "; expires=" + last_date.toUTCString());
+    document.cookie = name + "=" + value + "; path=" + path; // вешаем куки
 }
+
+
 var pb = 0;
 var eb = 0;
+var cardmoment = false;
 $(document).ready(
     function () {
 
@@ -17,72 +31,7 @@ $(document).ready(
 
 
 
-        //Обработка картинок
-        $('#0').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-
-
-        $('#1').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#2').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#3').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#4').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#5').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#6').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
-
-        $('#7').click(function () {
-            if ($(this).attr('src') != $('#e0').attr('src')) {
-                $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
-                $(this).attr('src', $('#e0').attr('src'));
-                pb++;
-            }
-        });
+        
 
         //Конец обработки картинок
 
@@ -103,7 +52,7 @@ $(document).ready(
 
 
 
-        
+
 
         $('#displayname').val(getCookie("Login"));
 
@@ -125,8 +74,9 @@ $(document).ready(
         };
 
         chat.client.resultbattle = function (mes) {
-            alert("mes");
-        }
+            alert(mes);
+            cardmoment = false;
+        };
 
         chat.client.generatedTeam = function (color) {
             if (color == "С") {
@@ -148,9 +98,13 @@ $(document).ready(
                 $('#6').attr("src", $('#saveK6').attr('src'));
                 $('#7').attr("src", $('#saveK7').attr('src'));
             }
-        }
+        };
 
-        
+        chat.client.backTableRoom = function () {
+
+        };
+
+
 
 
 
@@ -194,6 +148,12 @@ $(document).ready(
                     chat.server.startgame(Login, 0);
                 });
 
+                $('#Back').click(function () {
+                    var Login = getCookie("Login");
+                    chat.server.backInTableRoom(Login);
+                });
+
+
 
 
                 $('#Show-chat').click(function () {
@@ -208,44 +168,141 @@ $(document).ready(
 
                 //Обработка перемещение картинок отпрака на сервер
                 $('#0').click(function () {
+                    
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;         
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
+
+
                 });
 
                 $('#1').click(function () {
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#2').click(function () {
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#3').click(function () {
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#4').click(function () {
+
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#5').click(function () {
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#6').click(function () {
+
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
 
                 $('#7').click(function () {
+
+
+
                     var Login = getCookie("Login");
-                    chat.server.inputCard($(this).attr("id"), Login);
+    
+
+
+                    if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+                        $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
+                        $(this).attr('src', $('#e0').attr('src'));
+                        pb++;
+                        chat.server.inputCard($(this).attr("id"), Login);
+                    }
                 });
+
+
+                $('#HomePlace').click(function () {
+                    var Login = getCookie("Login");
+                    if (confirm("Вы хотите выйти? Да Или Нет")) {
+                        chat.server.outPlayer(Login);
+                    }
+                });
+
+                $('#RegisterPlace').click(function () {
+                    var Login = getCookie("Login");
+                    if (confirm("Вы хотите выйти? Да Или Нет")) {
+                        chat.server.outPlayer(Login);
+                    }
+                });
+
+                $('#DescriptionPace').click(function () {
+                    var Login = getCookie("Login");
+                    if (confirm("Вы хотите выйти? Да Или Нет")) {
+                        chat.server.outPlayer(Login);
+                    }
+                });
+
+                window.onbeforeunload = function () {
+                    var Login = getCookie("Login");
+                    setCookie('Login', Login, -2, '/');
+                    chat.server.playerClosWindow(Login);
+                }
 
             });
     });

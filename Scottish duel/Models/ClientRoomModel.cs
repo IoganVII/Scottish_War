@@ -29,5 +29,11 @@ namespace Scottish_duel.Models
 
         public bool secondPLayerActiveCard { set; get; }
 
+        public int vPointFerstPlayer { set; get; }
+
+        public int vPointSecondPlayer { set; get; }
+
+        public int numberRound { set; get; }
+
     }
 }
