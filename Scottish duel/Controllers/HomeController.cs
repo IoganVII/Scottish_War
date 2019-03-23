@@ -23,21 +23,22 @@ namespace Scottish_duel.Controllers
             {
                 string str = Request.Cookies["Login"].Value;
                 ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
-                if (Player.outPlauer == false)
-                    return RedirectToAction("ClientRoom", "Play");
+                if (Player != null)
+                    if (Player.outPlauer == false)
+                        return RedirectToAction("ClientRoom", "Play");
 
-                
+
 
                 Request.Cookies["Login"].Expires = DateTime.Now.AddDays(-1);
                 Response.Cookies.Add(Request.Cookies["Login"]);
-                
+
                 if (Player != null)
                 {
                     Ap.ActionPlayers.Remove(Player);
                     Ap.SaveChanges();
                 }
 
-                
+
 
             }
 
@@ -54,8 +55,9 @@ namespace Scottish_duel.Controllers
 
                 string str = Request.Cookies["Login"].Value;
                 ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
-                if (Player.outPlauer == false)
-                    return RedirectToAction("ClientRoom", "Play");
+                if (Player != null)
+                    if (Player.outPlauer == false)
+                        return RedirectToAction("ClientRoom", "Play");
 
                 if (Player != null)
                 {
@@ -81,8 +83,9 @@ namespace Scottish_duel.Controllers
 
                 string str = Request.Cookies["Login"].Value;
                 ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
-                if (Player.outPlauer == false)
-                    return RedirectToAction("ClientRoom", "Play");
+                if (Player != null)
+                    if (Player.outPlauer == false)
+                        return RedirectToAction("ClientRoom", "Play");
 
                 if (Player != null)
                 {

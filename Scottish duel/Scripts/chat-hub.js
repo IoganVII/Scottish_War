@@ -31,7 +31,7 @@ $(document).ready(
 
 
 
-        
+
 
         //Конец обработки картинок
 
@@ -100,8 +100,10 @@ $(document).ready(
             }
         };
 
-        chat.client.backTableRoom = function () {
 
+
+        chat.client.getboolcard = function () {
+            cardmoment = true;
         };
 
 
@@ -113,44 +115,56 @@ $(document).ready(
 
         $.connection.hub.start().
             done(function () {
+                var Login = getCookie("Login");
 
-
+                $('#CreateRoom').click(function () {
+                    if (!!Login)
+                        document.location.pathname = "/Play/CreateRoom";
+                });
 
 
                 $('#sendmessage').click(function () {
-                    chat.server.send($('#displayname').val(), $('#message').val());
-                    $('#message').val('').focus();
+                    if (!!Login) {
+                        chat.server.send($('#displayname').val(), $('#message').val());
+                        $('#message').val('').focus();
+                    }
                 });
 
                 $('#ViewRoom').click(function () {
-                    chat.server.viewRoomGroup($('#displayname').val(), $('#name').val(), $('#password').val())
+                    if (!!Login) {
+                        chat.server.viewRoomGroup($('#displayname').val(), $('#name').val(), $('#password').val())
+                    }
                 });
 
                 $('#joinRoom').click(function () {
-                    chat.server.joinRoomGroup($('#displayname').val(), point.find('#id').text());
+                    if (!!Login) {
+                        chat.server.joinRoomGroup($('#displayname').val(), point.find('#id').text());
+                    }
                 });
 
                 if (document.location.pathname == "/Play/ClientRoom") {
-                    chat.server.waitPlayer("WaitPlayer");
+                    if (!!Login)
+                        chat.server.waitPlayer("WaitPlayer");
                 };
 
                 if (document.location.pathname == "/Play/CreatedRoom") {
-                    chat.server.groupPlayerInRoom($('#idRoom').val());
+                    if (!!Login)
+                        chat.server.groupPlayerInRoom($('#idRoom').val());
                 };
 
                 if (document.location.pathname == "/Play/Game") {
-                    var Login = getCookie("Login");
-                    chat.server.startgame(Login, 1);
+                    if (!!Login)
+                        chat.server.startgame(Login, 1);
                 };
 
                 $('#bStartGame').click(function () {
-                    var Login = getCookie("Login");
-                    chat.server.startgame(Login, 0);
+                    if (!!Login)
+                        chat.server.startgame(Login, 0);
                 });
 
                 $('#Back').click(function () {
-                    var Login = getCookie("Login");
-                    chat.server.backInTableRoom(Login);
+                    if (!!Login)
+                        chat.server.backInTableRoom(Login);
                 });
 
 
@@ -168,14 +182,14 @@ $(document).ready(
 
                 //Обработка перемещение картинок отпрака на сервер
                 $('#0').click(function () {
-                    
+
                     var Login = getCookie("Login");
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
-                        pb++;         
+                        pb++;
                         chat.server.inputCard($(this).attr("id"), Login);
                     }
 
@@ -265,7 +279,7 @@ $(document).ready(
 
 
                     var Login = getCookie("Login");
-    
+
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
@@ -278,31 +292,30 @@ $(document).ready(
 
 
                 $('#HomePlace').click(function () {
-                    var Login = getCookie("Login");
-                    if (confirm("Вы хотите выйти? Да Или Нет")) {
-                        chat.server.outPlayer(Login);
+                    if (!!Login) {
+                        if (confirm("Вы хотите выйти?")) {
+                            chat.server.outPlayer(Login);
+                        }
                     }
+
                 });
 
                 $('#RegisterPlace').click(function () {
-                    var Login = getCookie("Login");
-                    if (confirm("Вы хотите выйти? Да Или Нет")) {
-                        chat.server.outPlayer(Login);
+                    if (!!Login) {
+                        if (confirm("Вы хотите выйти?")) {
+                            chat.server.outPlayer(Login);
+                        }
                     }
                 });
+
 
                 $('#DescriptionPace').click(function () {
-                    var Login = getCookie("Login");
-                    if (confirm("Вы хотите выйти? Да Или Нет")) {
-                        chat.server.outPlayer(Login);
+                    if (!!Login) {
+                        if (confirm("Вы хотите выйти?")) {
+                            chat.server.outPlayer(Login);
+                        }
                     }
                 });
-
-                window.onbeforeunload = function () {
-                    var Login = getCookie("Login");
-                    setCookie('Login', Login, -2, '/');
-                    chat.server.playerClosWindow(Login);
-                }
 
             });
     });

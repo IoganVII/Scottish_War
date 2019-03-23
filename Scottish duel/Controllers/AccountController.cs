@@ -34,8 +34,9 @@ namespace Scottish_duel.Controllers
 
                 string str = Request.Cookies["Login"].Value;
                 ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == str).FirstOrDefault();
-                if (Player.outPlauer == false)
-                    return RedirectToAction("ClientRoom", "Play");
+                if (Player != null)
+                    if (Player.outPlauer == false)
+                        return RedirectToAction("ClientRoom", "Play");
 
                 if (Player != null)
                 {
