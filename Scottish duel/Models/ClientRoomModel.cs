@@ -35,5 +35,17 @@ namespace Scottish_duel.Models
 
         public int numberRound { set; get; }
 
+        public int delayedRound { set; get; }
+
+        public int P1bonusLegate { set; get; }
+
+
+        public int P2bonusLegate { set; get; }
+
+        public int P1bonusGeneral { set; get; }
+
+        public int P2bonusGeneral { set; get; }
+
+
     }
 }

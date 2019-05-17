@@ -73,8 +73,17 @@ $(document).ready(
             document.location.href = "Game";
         };
 
-        chat.client.resultbattle = function (mes) {
+        $('#BotGame').click(function () {
+            var Login = getCookie("Login");
+            if (!!Login) {
+                document.location.href = "BotGame";
+            }
+        });
+
+        chat.client.resultbattle = function (mes,VP1,VP2) {
             alert(mes);
+            $('#LabelFirstPlayer').text("Синий игрок: " + String(VP1));
+            $('#LabelSecondPlayer').text("Красный игрок: " + String(VP2));
             cardmoment = false;
         };
 
@@ -122,6 +131,8 @@ $(document).ready(
                         document.location.pathname = "/Play/CreateRoom";
                 });
 
+                
+
 
                 $('#sendmessage').click(function () {
                     if (!!Login) {
@@ -144,7 +155,7 @@ $(document).ready(
 
                 if (document.location.pathname == "/Play/ClientRoom") {
                     if (!!Login)
-                        chat.server.waitPlayer("WaitPlayer");
+                        chat.server.waitPlayer("WaitPlayer", Login);
                 };
 
                 if (document.location.pathname == "/Play/CreatedRoom") {
@@ -161,6 +172,8 @@ $(document).ready(
                     if (!!Login)
                         chat.server.startgame(Login, 0);
                 });
+
+
 
                 $('#Back').click(function () {
                     if (!!Login)

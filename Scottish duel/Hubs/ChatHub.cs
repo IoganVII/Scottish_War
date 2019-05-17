@@ -24,6 +24,266 @@ namespace Scottish_duel.Hubs
         CardModelContext Cb = new CardModelContext();
 
 
+        //Определить победителя
+        int Winner(CardModel card1, CardModel card2, ClientRoomModel model)
+        {
+
+            bool win1 = false;
+            bool win2 = false;
+            //Матрица правил
+            int[,] rule = new int[8, 8] {
+            {0,1,1,1,1,1,2,0 },
+            {2,0,2,1,2,1,1,0 },
+            {2,2,0,1,1,1,1,1 },
+            {2,2,2,0,2,1,1,0 },
+            {2,1,2,1,0,2,2,0 },
+            {2,2,2,2,1,0,1,0 },
+            {1,2,2,2,1,2,0,0 },
+            {0,0,2,0,0,0,0,0 }
+        };
+
+            var stregth1 = card1.strength;
+            var stregth2 = card2.strength;
+
+            //Если в раунде побеждает принцесса.
+            if (card1.id == 2 || card2.id == 2)
+            {
+                if (card1.id == 2 && card2.id == 8)
+                {
+                    return 3;
+                }
+
+                if (card2.id == 2 && card1.id == 8)
+                {
+                    return 4;
+                }
+            }
+
+            //Если кто-то сыграл посла, активация свойства
+            if (card1.number == 4 || card2.number == 4)
+            {
+                if (card1.number == 4)
+                {
+                    model.P1bonusLegate = 2;
+                }
+                else
+                {
+                    model.P2bonusLegate = 2;
+                }
+            }
+
+
+
+
+
+            //Просчёт раунда с учётом свойства генерала
+            if (model.P1bonusGeneral != 0 || model.P2bonusGeneral != 0)
+            {
+                if (model.P1bonusGeneral != 0)
+                {
+                    stregth1 += model.P1bonusGeneral;
+                    model.P1bonusGeneral = 0;
+                }
+                else
+                {
+                    stregth2 += model.P2bonusGeneral;
+                    model.P2bonusGeneral = 0;
+                }
+
+                if (card1.number != 0 && card2.number != 0)
+
+                {
+                    if (stregth1 > stregth2)
+                    {
+                        if (card2.number == 3)
+                        {
+                            if (model.P2bonusLegate != 0)
+                            {
+                                model.vPointSecondPlayer += model.P2bonusLegate;
+                                model.P2bonusLegate = 0;
+                            }
+                            else
+                                model.vPointSecondPlayer++;
+
+                            //Отменяем навык вражеского посла
+                            if (model.P1bonusLegate != 0)
+                                model.P1bonusLegate = 0;
+
+                            if (model.delayedRound != 0)
+                            {
+                                model.vPointSecondPlayer = model.vPointSecondPlayer + model.delayedRound;
+                                model.delayedRound = 0;
+                            }
+                            win2 = true;
+                        }
+                        else
+                        {
+                            if (model.P1bonusLegate != 0)
+                            {
+                                model.vPointFerstPlayer += model.P1bonusLegate;
+                                model.P1bonusLegate = 0;
+                            }
+                            else
+                                model.vPointFerstPlayer++;
+
+                            //Отменяем навык вражеского посла
+                            if (model.P2bonusLegate != 0)
+                                model.P2bonusLegate = 0;
+
+                            if (model.delayedRound != 0)
+                            {
+                                model.vPointFerstPlayer = model.vPointFerstPlayer + model.delayedRound;
+                                model.delayedRound = 0;
+                            }
+                            win1 = true;
+                        }
+                    }
+                    if (stregth2 > stregth1)
+                    {
+                        if (card1.number == 3)
+                        {
+                            if (model.P1bonusLegate != 0)
+                            {
+                                model.vPointFerstPlayer += model.P1bonusLegate;
+                                model.P1bonusLegate = 0;
+                            }
+                            else
+                                model.vPointFerstPlayer++;
+
+                            //Отменяем навык вражеского посла
+                            if (model.P2bonusLegate != 0)
+                                model.P2bonusLegate = 0;
+
+                            if (model.delayedRound != 0)
+                            {
+                                model.vPointFerstPlayer = model.vPointFerstPlayer + model.delayedRound;
+                                model.delayedRound = 0;
+                            }
+                            win1 = true;
+                        }
+                        else
+                        {
+                            if (model.P2bonusLegate != 0)
+                            {
+                                model.vPointSecondPlayer += model.P2bonusLegate;
+                                model.P2bonusLegate = 0;
+                            }
+                            else
+                                model.vPointSecondPlayer++;
+
+                            //Отменяем навык вражеского посла
+                            if (model.P1bonusLegate != 0)
+                                model.P1bonusLegate = 0;
+
+                            if (model.delayedRound != 0)
+                            {
+                                model.vPointSecondPlayer = model.vPointSecondPlayer + model.delayedRound;
+                                model.delayedRound = 0;
+                            }
+                            win2 = true;
+                        }
+                    }
+                }else
+                    model.delayedRound++;
+
+
+            }
+            //Обычный просчёт игры
+            else
+            {
+
+                int win = rule[7 - stregth2, 7 - stregth1];
+                switch (win)
+                {
+                    case 0:
+                        model.delayedRound++;
+                        break;
+                    case 1:
+                        if (model.P2bonusLegate != 0)
+                        {
+                            model.vPointSecondPlayer += model.P2bonusLegate;
+                            model.P2bonusLegate = 0;
+                        }
+                        else
+                            model.vPointSecondPlayer++;
+
+                        //Отменяем навык вражеского посла
+                        if (model.P1bonusLegate != 0)
+                            model.P1bonusLegate = 0;
+
+                        if (model.delayedRound != 0)
+                        {
+                            model.vPointSecondPlayer = model.vPointSecondPlayer + model.delayedRound;
+                            model.delayedRound = 0;
+                        }
+                        win2 = true;
+                        break;
+                    case 2:
+                        if (model.P1bonusLegate != 0)
+                        {
+                            model.vPointFerstPlayer += model.P1bonusLegate;
+                            model.P1bonusLegate = 0;
+                        }
+                        else
+                            model.vPointFerstPlayer++;
+
+                        //Отменяем навык вражеского посла
+                        if (model.P2bonusLegate != 0)
+                            model.P2bonusLegate = 0;
+
+                        if (model.delayedRound != 0)
+                        {
+                            model.vPointFerstPlayer = model.vPointFerstPlayer + model.delayedRound;
+                            model.delayedRound = 0;
+                        }
+                        win1 = true;
+                        break;
+                }
+
+            }
+
+            //Если кто-то сыграл Генерала, активация свойства
+            if (card1.number == 6 || card2.number == 6)
+            {
+                if (card1.number == 6 && card2.number != 5)
+                {
+                    model.P1bonusGeneral = 2;
+                }
+
+                if (card2.number == 6 && card1.number != 5)
+                {
+                    model.P2bonusGeneral = 2;
+                }
+
+            }
+
+
+            model.numberRound++;
+            model.firstPLayerActiveCard = false;
+            model.secondPLayerActiveCard = false;
+            Rb.SaveChanges();
+
+
+            if (model.numberRound == 8)
+            {
+                if (model.vPointFerstPlayer > model.vPointSecondPlayer)
+                    return 3;
+                if (model.vPointFerstPlayer < model.vPointSecondPlayer)
+                    return 4;
+                if (model.vPointFerstPlayer == model.vPointSecondPlayer)
+                    return 5;
+            }
+
+            if (win1 == true)
+                return 1;
+            if (win2 == true)
+                return 2;
+            if (win1 == false && win2 == false)
+                return 0;
+            return 0;
+        }
+
+
         //Отправка в чат
         public void send(string name, string message)
         {
@@ -87,9 +347,15 @@ namespace Scottish_duel.Hubs
         }
 
         //Группа игроков при выборе комнаты
-        public void waitPlayer(string group)
+        public void waitPlayer(string group, string Login)
         {
             Groups.Add(Context.ConnectionId, group);
+            ActionPlayer Player = Ap.ActionPlayers.Where(o => o.Name == Login).FirstOrDefault();
+            if (Player.idRoom != 0)
+            {
+                backInTableRoom(Login);
+            }
+
         }
 
         //Группа игроков в комнате
@@ -108,6 +374,11 @@ namespace Scottish_duel.Hubs
             {
                 model.firstPLayerActiveCard = false;
                 model.secondPLayerActiveCard = false;
+                model.delayedRound = 0;
+                model.P1bonusLegate = 0;
+                model.P2bonusLegate = 0;
+                model.P1bonusGeneral = 0;
+                model.P2bonusGeneral = 0;
                 model.vPointFerstPlayer = 0;
                 model.vPointSecondPlayer = 0;
                 model.numberRound = 0;
@@ -143,55 +414,37 @@ namespace Scottish_duel.Hubs
             if ((model.firstPLayerActiveCard == true) && (model.secondPLayerActiveCard == true))
             {
 
-                int[,] rule = new int[8, 8] {
-            {0,1,1,1,1,1,2,0 },
-            {2,0,2,1,2,1,1,0 },
-            {2,2,0,1,1,1,1,1 },
-            {2,2,2,0,2,1,1,0 },
-            {2,1,2,1,0,2,2,0 },
-            {2,2,2,2,1,0,1,0 },
-            {1,2,2,2,1,2,0,0 },
-            {0,0,2,0,0,0,0,0 }
-        };
-
                 CardModel card1 = Cb.CardModels.Where(o => o.number == model.idFirstPlayerCad).FirstOrDefault();
                 CardModel card2 = Cb.CardModels.Where(o => o.number == model.idSecondPlayerCad).FirstOrDefault();
 
-                var stregth1 = card1.strength;
-                var stregth2 = card2.strength;
+                var win = Winner(card1, card2, model);
 
-                int win = rule[7 - stregth2, 7 - stregth1];
                 switch (win)
                 {
                     case 0:
-                        Clients.Group(idRoom.ToString()).resultbattle("Раунд отложен");
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд отложен", model.vPointFerstPlayer, model.vPointSecondPlayer);
                         break;
                     case 1:
-                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа красных");
-                        model.vPointSecondPlayer++;
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа синих", model.vPointFerstPlayer, model.vPointSecondPlayer);
                         break;
                     case 2:
-                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа синих");
-                        model.vPointFerstPlayer++;
+                        Clients.Group(idRoom.ToString()).resultbattle("Раунд Победа красных", model.vPointFerstPlayer, model.vPointSecondPlayer);
+                        break;
+                    case 3:
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа синих");
+                        Clients.Group(idRoom.ToString()).upDateRoom();
+                        return;
+                    case 4:
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа красных");
+                        Clients.Group(idRoom.ToString()).upDateRoom();
+                        return;
+                    case 5:
+                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: ничья");
+                        Clients.Group(idRoom.ToString()).upDateRoom();
+                        return;
+                    default:
                         break;
                 }
-
-                model.numberRound++;
-                model.firstPLayerActiveCard = false;
-                model.secondPLayerActiveCard = false;
-                Rb.SaveChanges();
-
-                if (model.numberRound == 8)
-                {
-                    if (model.vPointFerstPlayer > model.vPointSecondPlayer)
-                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа синих");
-                    if (model.vPointFerstPlayer < model.vPointSecondPlayer)
-                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: Победа красных");
-                    if (model.vPointFerstPlayer == model.vPointSecondPlayer)
-                        Clients.Group(idRoom.ToString()).resultbattle("Конец игры: ничья");
-                    Clients.Group(idRoom.ToString()).upDateRoom();
-                }
-
             }
         }
 
@@ -253,7 +506,7 @@ namespace Scottish_duel.Hubs
                         SecondPlayer.idRoom = 0;
                     }
                     Ap.SaveChanges();
-                    
+
                 }
                 else
                 {
@@ -262,7 +515,7 @@ namespace Scottish_duel.Hubs
                     Rb.SaveChanges();
                     Clients.Group("WaitPlayer").upDateTableRoom();
                     Clients.OthersInGroup(Player.idRoom.ToString()).upDateRoom();
-                    
+
                     Player.idRoom = 0;
                     Ap.SaveChanges();
                     Clients.Caller.upDateTableRoom();
@@ -283,8 +536,5 @@ namespace Scottish_duel.Hubs
             Ap.ActionPlayers.Remove(Player);
             Ap.SaveChanges();
         }
-
-
-
     }
 }

@@ -1,10 +1,9 @@
 ﻿<input hidden value="" id="idRoom" />
 @{
-    ViewBag.Title = "Game";
+    ViewBag.Title = "BotGame";
 }
-<script src="~/Scripts/chat-hub.js"></script>
-<script src="~/Scripts/Game.js"></script>
 
+<script src="~/Scripts/room-hub.js"></script>
 
 <img id="saveC0" src="~/Image/С0.PNG" hidden />
 <img id="saveC1" src="~/Image/С1.PNG" hidden />
@@ -72,5 +71,4 @@
 
 
 
-@Html.Partial("~/Views/chat/chat.cshtml")
 @Html.Partial("~/Views/Play/PlayerPoint.cshtml")

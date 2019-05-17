@@ -19,6 +19,8 @@ namespace Scottish_duel.Models
 
         public bool outPlauer { set; get; }
 
+        
+
         public List<CardModel> deckCard;
     }
 }

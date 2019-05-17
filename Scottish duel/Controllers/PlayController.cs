@@ -110,6 +110,11 @@ namespace Scottish_duel.Controllers
             return View();
         }
 
+        public ActionResult BotGame()
+        {
+            return View();
+        }
+
     }
 
 }

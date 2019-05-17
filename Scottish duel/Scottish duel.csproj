@@ -200,6 +200,7 @@
     <Content Include="App_Code\Helpers.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\room-hub.js" />
     <Content Include="Scripts\chat-hub.js" />
     <Content Include="Scripts\Game.js" />
     <Content Include="Scripts\GameTable.js" />
@@ -235,6 +236,8 @@
     <Content Include="Views\Play\Game.cshtml">
       <BrowseToURL>~/Play/Game</BrowseToURL>
     </Content>
+    <Content Include="Views\Play\PlayerPoint.cshtml" />
+    <Content Include="Views\Play\BotGame.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

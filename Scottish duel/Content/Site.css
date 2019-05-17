@@ -27,10 +27,12 @@ textarea {
     display:flex;
 
 }
+.player-window {
 
-.chat-window .chat-button{
-    margin-left:auto;
+}
 
+.chat-window .chat-button {
+    margin-left: auto;
 }
 
 .chat-window{
@@ -86,4 +88,12 @@ textarea {
 #PlayerBattleSpace {
     width: 100%;
     height: 50%;
+}
+
+#PlayerVictory {
+    margin-left: auto;
+    display: flex;
+    left: 0;
+    bottom: 0;
+
 }
