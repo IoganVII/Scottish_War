@@ -46,6 +46,10 @@ namespace Scottish_duel.Models
 
         public int P2bonusGeneral { set; get; }
 
+        public int P1bonusSpook { set; get; }
+
+        public int P2bonusSpook { set; get; }
+
 
     }
 }

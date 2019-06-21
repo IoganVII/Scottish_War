@@ -16,7 +16,6 @@ namespace Scottish_duel
         CardModelContext Cb = new CardModelContext();
         protected void Application_Start()
         {
-
             Ap.Database.Delete();
             Rb.Database.Delete();
             Cb.Database.Delete();

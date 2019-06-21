@@ -53,12 +53,17 @@ $(document).ready(
         };
 
 
-        room.client.enemyCard = function (cardId, color) {
-            if (color == "С")
-                $('#eb' + eb.toString()).attr('src', $('#saveC' + cardId).attr('src'));
-            if (color == "K")
-                $('#eb' + eb.toString()).attr('src', $('#saveK' + cardId).attr('src'));
-            eb++;
+        room.client.enemyCard = function (cardId, color, flag) {
+            if (flag == 0) {
+                $('#eb' + eb.toString()).attr('src', $('#e0').attr('src'));
+            }
+            if (flag == 1) {
+                if (color == "С")
+                    $('#eb' + eb.toString()).attr('src', $('#saveC' + cardId).attr('src'));
+                if (color == "K")
+                    $('#eb' + eb.toString()).attr('src', $('#saveK' + cardId).attr('src'));
+                eb++;
+            }
         };
 
         room.client.resultbattle = function (mes, VP1, VP2) {

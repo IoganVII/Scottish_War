@@ -37,12 +37,17 @@ $(document).ready(
 
         //Обработка перемещения карт противника
 
-        chat.client.enemyCard = function (cardId, color) {
-            if (color == "С")
-                $('#eb' + eb.toString()).attr('src', $('#saveC' + cardId).attr('src'));
-            if (color == "K")
-                $('#eb' + eb.toString()).attr('src', $('#saveK' + cardId).attr('src'));
-            eb++;
+        chat.client.enemyCard = function (cardId, color, flag) {
+            if (flag == 0) {
+                    $('#eb' + eb.toString()).attr('src', $('#e0').attr('src'));
+            }
+            if (flag == 1) {
+                if (color == "С")
+                    $('#eb' + eb.toString()).attr('src', $('#saveC' + cardId).attr('src'));
+                if (color == "K")
+                    $('#eb' + eb.toString()).attr('src', $('#saveK' + cardId).attr('src'));
+                eb++;
+            }
         };
 
 
@@ -80,7 +85,7 @@ $(document).ready(
             }
         });
 
-        chat.client.resultbattle = function (mes,VP1,VP2) {
+        chat.client.resultbattle = function (mes, VP1, VP2) {
             alert(mes);
             $('#LabelFirstPlayer').text("Синий игрок: " + String(VP1));
             $('#LabelSecondPlayer').text("Красный игрок: " + String(VP2));
@@ -131,7 +136,7 @@ $(document).ready(
                         document.location.pathname = "/Play/CreateRoom";
                 });
 
-                
+
 
 
                 $('#sendmessage').click(function () {
@@ -208,12 +213,154 @@ $(document).ready(
 
 
                 });
+        /*        $("#0").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#0").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#1").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#1").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#2").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        { }
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#2").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.top = '620px';
+                    this.style.height = '180px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#3").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#3").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.top = '620px';
+                    this.style.height = '180px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#4").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#4").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#5").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        { }
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#5").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });
+
+                $("#6").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#6").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });
+                $("#7").mouseover(function () {
+                    if ($(this).attr('src') != $('#e0').attr('src')) {
+                        this.style.position = 'fixed';
+                        this.style.top = '550px';
+                        this.style.height = '300px';
+                        this.style.width = '200px';
+                        this.style.zIndex = '10';
+                    }
+                });
+
+                $("#7").mouseout(function () {
+                    this.style.width = '130px';
+                    this.style.height = '180px';
+                    this.style.top = '620px';
+                    this.style.zIndex = '0';
+                });*/
 
                 $('#1').click(function () {
                     var Login = getCookie("Login");
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -227,6 +374,12 @@ $(document).ready(
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -240,6 +393,13 @@ $(document).ready(
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -253,6 +413,13 @@ $(document).ready(
                     var Login = getCookie("Login");
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -266,6 +433,13 @@ $(document).ready(
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -280,6 +454,13 @@ $(document).ready(
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;
@@ -296,6 +477,13 @@ $(document).ready(
 
 
                     if (($(this).attr('src') != $('#e0').attr('src')) && (cardmoment == false)) {
+
+                        this.style.width = '130px';
+                        this.style.height = '180px';
+                        this.style.top = '620px';
+                        this.style.zIndex = '0';
+
+
                         $('#pb' + pb.toString()).attr('src', $(this).attr('src'));
                         $(this).attr('src', $('#e0').attr('src'));
                         pb++;

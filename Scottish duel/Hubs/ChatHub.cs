@@ -33,7 +33,7 @@ namespace Scottish_duel.Hubs
             //Матрица правил
             int[,] rule = new int[8, 8] {
             {0,1,1,1,1,1,2,0 },
-            {2,0,2,1,2,1,1,0 },
+            {2,0,1,1,2,1,1,0 },
             {2,2,0,1,1,1,1,1 },
             {2,2,2,0,2,1,1,0 },
             {2,1,2,1,0,2,2,0 },
@@ -66,10 +66,25 @@ namespace Scottish_duel.Hubs
                 {
                     model.P1bonusLegate = 2;
                 }
-                else
+                if (card2.number == 4)
                 {
                     model.P2bonusLegate = 2;
                 }
+            }
+
+            //Активация навыка шпиона
+            if (card1.number == 2 || card2.number == 2)
+            {
+                if (card1.number == 2 && card2.number != 5)
+                    model.P1bonusSpook = 1;
+                if (card2.number == 2 && card1.number != 5)
+                    model.P2bonusSpook = 1;
+                if (card2.number == 2 && card1.number == 2)
+                {
+                    model.P1bonusSpook = 0;
+                    model.P2bonusSpook = 0;
+                }
+
             }
 
 
@@ -84,7 +99,7 @@ namespace Scottish_duel.Hubs
                     stregth1 += model.P1bonusGeneral;
                     model.P1bonusGeneral = 0;
                 }
-                else
+                if (model.P2bonusGeneral != 0)
                 {
                     stregth2 += model.P2bonusGeneral;
                     model.P2bonusGeneral = 0;
@@ -183,7 +198,11 @@ namespace Scottish_duel.Hubs
                             win2 = true;
                         }
                     }
-                }else
+
+                    if (stregth1 == stregth2)
+                        model.delayedRound++;
+                }
+                else
                     model.delayedRound++;
 
 
@@ -191,7 +210,6 @@ namespace Scottish_duel.Hubs
             //Обычный просчёт игры
             else
             {
-
                 int win = rule[7 - stregth2, 7 - stregth1];
                 switch (win)
                 {
@@ -382,6 +400,8 @@ namespace Scottish_duel.Hubs
                 model.vPointFerstPlayer = 0;
                 model.vPointSecondPlayer = 0;
                 model.numberRound = 0;
+                model.P1bonusSpook = 0;
+                model.P2bonusSpook = 0;
                 Rb.SaveChanges();
                 Clients.Group(idRoom.ToString()).startGame(idRoom);
 
@@ -458,15 +478,58 @@ namespace Scottish_duel.Hubs
                 model.firstPLayerActiveCard = true;
                 model.idFirstPlayerCad = Int32.Parse(cardId);
                 Clients.Caller.getboolcard(model.firstPLayerActiveCard);
+                if (model.secondPLayerActiveCard == true)
+                {
+                    Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 1);
+                    if (model.P1bonusSpook == 0)
+                        Clients.Caller.enemyCard(model.idSecondPlayerCad.ToString(), "K", 1);
+                    else
+                        model.P1bonusSpook = 0;
+                }
+                else
+                {
+                    if (model.P2bonusSpook != 0)
+                    {
+                        Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 1);
+                    }
+                    else
+                    {
+                        Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 0);
+                        if (model.P1bonusSpook != 0)
+                            model.P1bonusSpook = 0;
+                    }
+                }
             }
             else
             {
                 model.secondPLayerActiveCard = true;
                 model.idSecondPlayerCad = Int32.Parse(cardId);
                 Clients.Caller.getboolcard(model.secondPLayerActiveCard);
+                if (model.firstPLayerActiveCard == true)
+                {
+                    Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 1);
+                    if (model.P2bonusSpook == 0)
+                        Clients.Caller.enemyCard(model.idFirstPlayerCad.ToString(), "С", 1);
+                    else
+                        model.P2bonusSpook = 0;
+                }
+                else
+                {
+                    if (model.P1bonusSpook != 0)
+                    {
+
+                        Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 1);
+                    }
+                    else
+                    {
+                        Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam, 0);
+                        if (model.P2bonusSpook != 0)
+                            model.P2bonusSpook = 0;
+                    }
+                }
             }
             Rb.SaveChanges();
-            Clients.OthersInGroup(idRoom.ToString()).enemyCard(cardId, Player.ColorTeam);
+
 
             battleround(cardId, Login);
         }
